@@ -1,0 +1,107 @@
+# ==============================
+# IGNORE COMPILED JAVA FILES
+# ==============================
+*.class
+*.jar
+*.war
+
+# ==============================
+# IGNORE BUILD DIRECTORIES
+# ==============================
+**/target/
+**/build/
+
+# Ignore dependency directories
+**/.mvn/
+**/.gradle/
+**/.idea/
+**/.vscode/
+
+# Ignore logs
+**/logs/
+**/*.log
+**/nohup.out
+
+# ==============================
+# IGNORE OS-SPECIFIC FILES
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
+# IGNORE TEST REPORTS
+# ==============================
+**/test-output/
+**/surefire-reports/
+**/jacoco/
+
+# ==============================
+# IGNORE FRONTEND FILES (IF EXISTS)
+# ==============================
+**/node_modules/
+**/dist/
+
+# ==============================
+# IGNORE CONFIGURATION FILES
+# ==============================
+
+# Ignore global environment & configuration files
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Ignore Spring Boot configuration files in all services
+identity/src/main/resources/application.yml
+identity/src/main/resources/application.yaml
+identity/src/main/resources/application.properties
+identity/src/main/resources/application-*.yml
+identity/src/main/resources/application-*.yaml
+identity/src/main/resources/application-*.properties
+
+product/src/main/resources/application.yml
+product/src/main/resources/application.yaml
+product/src/main/resources/application.properties
+product/src/main/resources/application-*.yml
+product/src/main/resources/application-*.yaml
+product/src/main/resources/application-*.properties
+
+api-gateway/src/main/resources/application.yml
+api-gateway/src/main/resources/application.yaml
+api-gateway/src/main/resources/application.properties
+api-gateway/src/main/resources/application-*.yml
+api-gateway/src/main/resources/application-*.yaml
+api-gateway/src/main/resources/application-*.properties
+
+# ==============================
+# IGNORE SERVICE-SPECIFIC FILES
+# ==============================
+
+## Identity service
+identity/.env
+identity/secrets/
+
+## Product service
+product/.env
+product/secrets/
+
+## API Gateway service
+api-gateway/.env
+api-gateway/secrets/
+
+# ==============================
+# IGNORE DOCKER & CONTAINER FILES
+# ==============================
+
+# Ignore Docker build cache (if using Docker)
+**/docker-compose.override.yml
+**/.dockerignore
+**/docker/data/
+**/docker/logs/
+
+# Ignore Kubernetes config files (if using K8s)
+**/k8s/
+**/kubernetes/
+
+# ==============================
+# END OF FILE
+# ==============================
