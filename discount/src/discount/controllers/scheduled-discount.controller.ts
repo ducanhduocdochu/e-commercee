@@ -98,7 +98,7 @@ export class ScheduledDiscountController {
     return this.scheduledDiscountService.createSetting({
       userId: req.user.id,
       createSettingDto,
-      discountAppliesType: 'Admin',
+      discountAppliesType: 'All',
     });
   }
 

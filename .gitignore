@@ -147,67 +147,20 @@ discount/docker/logs/
 **/discount/test-output/
 
 # ==============================
-# IGNORE CONFIGURATION FILES FOR SCHEDULED DISCOUNT SERVICE
+# IGNORE EXPRESS SERVICES IN LEVEL-1 AND LEVEL-2
 # ==============================
 
-# Ignore NestJS configuration files
-scheduled-discount/src/main/resources/application.yml
-scheduled-discount/src/main/resources/application.yaml
-scheduled-discount/src/main/resources/application.properties
-scheduled-discount/src/main/resources/application-*.yml
-scheduled-discount/src/main/resources/application-*.yaml
-scheduled-discount/src/main/resources/application-*.properties
+scheduled-discount/level-1/node_modules/
+scheduled-discount/level-1/dist/
+scheduled-discount/level-1/logs/
+scheduled-discount/level-1/.env
+scheduled-discount/level-1/tmp/
 
-# ==============================
-# IGNORE SERVICE-SPECIFIC FILES
-# ==============================
-
-## Scheduled Discount service
-scheduled-discount/.env
-scheduled-discount/secrets/
-
-# ==============================
-# IGNORE FRONTEND FILES (IF EXISTS)
-# ==============================
-
-**/scheduled-discount/node_modules/
-**/scheduled-discount/dist/
-
-# ==============================
-# IGNORE BUILD & TEST FILES
-# ==============================
-
-**/scheduled-discount/logs/
-**/scheduled-discount/test-output/
-**/scheduled-discount/coverage/
-**/scheduled-discount/*.log
-**/scheduled-discount/surefire-reports/
-**/scheduled-discount/jacoco/
-
-# ==============================
-# IGNORE DOCKER & CONTAINER FILES
-# ==============================
-
-scheduled-discount/docker-compose.override.yml
-scheduled-discount/.dockerignore
-scheduled-discount/docker/data/
-scheduled-discount/docker/logs/
-
-# ==============================
-# IGNORE OTHER FILES FOR SCHEDULED DISCOUNT SERVICE
-# ==============================
-
-# Ignore all temporary or generated files in the service
-**/scheduled-discount/tmp/
-**/scheduled-discount/.cache/
-**/scheduled-discount/.DS_Store
-**/scheduled-discount/Thumbs.db
-
-# ==============================
-# END OF FILE
-# ==============================
-
-
+scheduled-discount/level-2/node_modules/
+scheduled-discount/level-2/dist/
+scheduled-discount/level-2/logs/
+scheduled-discount/level-2/.env
+scheduled-discount/level-2/tmp/
 # ==============================
 # END OF FILE
 # ==============================
