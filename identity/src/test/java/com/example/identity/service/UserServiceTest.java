@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.identity.service.UserService;
 import jakarta.validation.ConstraintViolationException;
 
 import org.assertj.core.api.Assertions;

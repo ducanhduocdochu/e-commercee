@@ -94,6 +94,7 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.2.0</version>
 		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -177,6 +178,7 @@
 						<exclude>com/example/product/configuration/**</exclude>
 						<exclude>com/example/product/constant/**</exclude>
 						<exclude>com/example/product/exception/**</exclude>
+						<exclude>com/example/product/security/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

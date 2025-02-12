@@ -103,5 +103,112 @@ api-gateway/secrets/
 **/kubernetes/
 
 # ==============================
+# IGNORE CONFIGURATION FILES FOR NESTJS
+# ==============================
+
+# Ignore Spring Boot configuration files for discount service
+discount/src/main/resources/application.yml
+discount/src/main/resources/application.yaml
+discount/src/main/resources/application.properties
+discount/src/main/resources/application-*.yml
+discount/src/main/resources/application-*.yaml
+discount/src/main/resources/application-*.properties
+
+# ==============================
+# IGNORE SERVICE-SPECIFIC FILES
+# ==============================
+
+## Discount service
+discount/.env
+discount/secrets/
+
+# ==============================
+# IGNORE FRONTEND FILES (IF EXISTS)
+# ==============================
+**/discount/node_modules/
+**/discount/dist/
+
+# ==============================
+# IGNORE DOCKER & CONTAINER FILES
+# ==============================
+
+# Ignore Docker build cache for discount service
+discount/docker-compose.override.yml
+discount/.dockerignore
+discount/docker/data/
+discount/docker/logs/
+
+# ==============================
+# IGNORE OTHER FILES FOR DISCOUNT SERVICE
+# ==============================
+
+# Ignore any other files related to the discount service
+**/discount/*.log
+**/discount/test-output/
+
+# ==============================
+# IGNORE CONFIGURATION FILES FOR SCHEDULED DISCOUNT SERVICE
+# ==============================
+
+# Ignore NestJS configuration files
+scheduled-discount/src/main/resources/application.yml
+scheduled-discount/src/main/resources/application.yaml
+scheduled-discount/src/main/resources/application.properties
+scheduled-discount/src/main/resources/application-*.yml
+scheduled-discount/src/main/resources/application-*.yaml
+scheduled-discount/src/main/resources/application-*.properties
+
+# ==============================
+# IGNORE SERVICE-SPECIFIC FILES
+# ==============================
+
+## Scheduled Discount service
+scheduled-discount/.env
+scheduled-discount/secrets/
+
+# ==============================
+# IGNORE FRONTEND FILES (IF EXISTS)
+# ==============================
+
+**/scheduled-discount/node_modules/
+**/scheduled-discount/dist/
+
+# ==============================
+# IGNORE BUILD & TEST FILES
+# ==============================
+
+**/scheduled-discount/logs/
+**/scheduled-discount/test-output/
+**/scheduled-discount/coverage/
+**/scheduled-discount/*.log
+**/scheduled-discount/surefire-reports/
+**/scheduled-discount/jacoco/
+
+# ==============================
+# IGNORE DOCKER & CONTAINER FILES
+# ==============================
+
+scheduled-discount/docker-compose.override.yml
+scheduled-discount/.dockerignore
+scheduled-discount/docker/data/
+scheduled-discount/docker/logs/
+
+# ==============================
+# IGNORE OTHER FILES FOR SCHEDULED DISCOUNT SERVICE
+# ==============================
+
+# Ignore all temporary or generated files in the service
+**/scheduled-discount/tmp/
+**/scheduled-discount/.cache/
+**/scheduled-discount/.DS_Store
+**/scheduled-discount/Thumbs.db
+
+# ==============================
 # END OF FILE
 # ==============================
+
+
+# ==============================
+# END OF FILE
+# ==============================
+

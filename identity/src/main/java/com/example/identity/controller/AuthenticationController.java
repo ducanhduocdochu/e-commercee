@@ -2,23 +2,22 @@ package com.example.identity.controller;
 
 import java.text.ParseException;
 
-import com.example.identity.dto.request.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.identity.dto.request.*;
 import com.example.identity.dto.response.AuthenticationResponse;
 import com.example.identity.dto.response.IntrospectResponse;
 import com.example.identity.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Authentication", description = "Quản lý xác thực người dùng")
 @RestController

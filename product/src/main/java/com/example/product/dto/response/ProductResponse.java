@@ -1,9 +1,9 @@
 package com.example.product.dto.response;
 
-import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import lombok.*;
 
 @Getter
 @Setter
@@ -17,6 +17,6 @@ public class ProductResponse {
     private int stock;
     private String categoryId;
     private String sellerId;
-    private LocalDateTime createdAt;  // ✅ Thêm thời gian tạo
-    private LocalDateTime updatedAt;  // ✅ Thêm thời gian cập nhật
+    private LocalDateTime createdAt; // ✅ Thêm thời gian tạo
+    private LocalDateTime updatedAt; // ✅ Thêm thời gian cập nhật
 }

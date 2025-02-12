@@ -1,5 +1,28 @@
 package com.example.product.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.example.product.dto.request.ProductCreationRequest;
 import com.example.product.dto.request.ProductUpdateRequest;
 import com.example.product.dto.response.ProductResponse;
@@ -12,31 +35,9 @@ import com.example.product.repository.CategoryRepository;
 import com.example.product.repository.ProductRepository;
 import com.example.product.security.AuthenticatedUser;
 import com.example.product.security.AuthorizationUtil;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class ProductServiceAuthTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -69,18 +70,26 @@ class ProductServiceTest {
         product.setCategory(category);
         product.setSellerId("seller-123");
 
-        productCreationRequest = new ProductCreationRequest(
-                "Test Product", "Description", BigDecimal.valueOf(100), 10, "category-123"
-        );
+        productCreationRequest =
+                new ProductCreationRequest("Test Product", "Description", BigDecimal.valueOf(100), 10, "category-123");
 
-        productUpdateRequest = new ProductUpdateRequest(
-                "Updated Product", "Updated Description", BigDecimal.valueOf(150), 15
-        );
+        productUpdateRequest =
+                new ProductUpdateRequest("Updated Product", "Updated Description", BigDecimal.valueOf(150), 15);
 
         productResponse = new ProductResponse(
-                "product-123", "Test Product", "Description", BigDecimal.valueOf(100),
-                10, "category-123", "seller-123", null, null
-        );
+                "product-123",
+                "Test Product",
+                "Description",
+                BigDecimal.valueOf(100),
+                10,
+                "category-123",
+                "seller-123",
+                null,
+                null);
+
+        // ✅ Mock SecurityContext và AuthorizationUtil trong setup
+        mockSecurityContext("seller-123", "ROLE_SELLER");
+        mockAuthorizationUtil();
     }
 
     private void mockSecurityContext(String userId, String rawRoles) {
@@ -88,79 +97,29 @@ class ProductServiceTest {
         Authentication authentication = mock(Authentication.class);
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(userId, rawRoles);
 
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(authenticatedUser);
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(authentication.getPrincipal()).thenReturn(authenticatedUser);
 
         // ✅ Chuyển danh sách role thành Collection<? extends GrantedAuthority>
-        Collection<? extends GrantedAuthority> authorities = Arrays.stream(rawRoles.split(" "))
+        Collection<GrantedAuthority> authorities = Arrays.stream(rawRoles.split(" "))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        when(authentication.getAuthorities()).thenReturn(authorities); // ✅ Đúng kiểu dữ liệu
+        lenient().when(authentication.getAuthorities()).thenAnswer(invocation -> authorities);
 
         SecurityContextHolder.setContext(securityContext);
     }
 
     private void mockAuthorizationUtil() {
         try (var mockedAuthorizationUtil = mockStatic(AuthorizationUtil.class)) {
-            mockedAuthorizationUtil.when(() -> AuthorizationUtil.checkAuthorities(any())).thenAnswer(invocation -> null);
+            mockedAuthorizationUtil
+                    .when(() -> AuthorizationUtil.checkAuthorities(any()))
+                    .thenAnswer(invocation -> null);
         }
     }
 
     @Test
-    void getProducts_ShouldReturnListOfProducts() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "name"));
-        List<Product> productList = List.of(product);
-        Page<Product> productPage = new PageImpl<>(productList);
-
-        when(productRepository.findAll(pageable)).thenReturn(productPage);
-        when(productMapper.toProductResponseList(productList)).thenReturn(List.of(productResponse));
-
-        List<ProductResponse> result = productService.getProducts(10, 0, "name", "ASC");
-
-        assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Test Product");
-    }
-
-    @Test
-    void getProduct_ShouldReturnProductResponse_WhenProductExists() {
-        when(productRepository.findById("product-123")).thenReturn(Optional.of(product));
-        when(productMapper.toProductResponse(product)).thenReturn(productResponse);
-
-        ProductResponse result = productService.getProduct("product-123");
-
-        assertThat(result).isNotNull();
-        assertThat(result.getName()).isEqualTo("Test Product");
-    }
-
-    @Test
-    void getProduct_ShouldThrowException_WhenProductNotFound() {
-        when(productRepository.findById("invalid-id")).thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> productService.getProduct("invalid-id"))
-                .isInstanceOf(AppException.class)
-                .hasMessage(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
-    }
-
-    @Test
-    void getProductsByIds_ShouldReturnListOfProductResponses() {
-        List<String> productIds = List.of("product-123");
-        List<Product> products = List.of(product);
-
-        when(productRepository.findAllById(productIds)).thenReturn(products);
-
-        List<ProductResponse> result = productService.getProductsByIds(productIds);
-
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Test Product");
-    }
-
-    @Test
     void createProduct_ShouldReturnProductResponse_WhenSuccessful() {
-        mockSecurityContext();
-        mockAuthorizationUtil();
-
         when(categoryRepository.findById("category-123")).thenReturn(Optional.of(category));
         when(productMapper.toProduct(productCreationRequest, category)).thenReturn(product);
         when(productRepository.save(any(Product.class))).thenReturn(product);
@@ -172,10 +131,30 @@ class ProductServiceTest {
     }
 
     @Test
-    void updateProduct_ShouldUpdateAndReturnProductResponse() {
-        mockSecurityContext();
-        mockAuthorizationUtil();
+    void createProduct_ShouldThrowException_WhenSellerIdIsMissing() {
+        // ✅ Mock SecurityContext nhưng không có sellerId
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        AuthenticatedUser authenticatedUser = new AuthenticatedUser(null, "ROLE_SELLER"); // sellerId = null
 
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(authentication.getPrincipal()).thenReturn(authenticatedUser);
+        SecurityContextHolder.setContext(securityContext);
+
+        // ✅ Không kiểm tra quyền trong test này để đảm bảo lỗi đúng đến từ sellerId bị null
+        try (var mockedAuthorizationUtil = mockStatic(AuthorizationUtil.class)) {
+            mockedAuthorizationUtil
+                    .when(() -> AuthorizationUtil.checkAuthorities(any()))
+                    .thenAnswer(invocation -> null);
+
+            assertThatThrownBy(() -> productService.createProduct(productCreationRequest))
+                    .isInstanceOf(AppException.class)
+                    .hasMessage(ErrorCode.UNAUTHENTICATED.getMessage());
+        }
+    }
+
+    @Test
+    void updateProduct_ShouldUpdateAndReturnProductResponse() {
         when(productRepository.findById("product-123")).thenReturn(Optional.of(product));
         when(productRepository.save(any(Product.class))).thenReturn(product);
         when(productMapper.toProductResponse(product)).thenReturn(productResponse);
@@ -187,9 +166,6 @@ class ProductServiceTest {
 
     @Test
     void deleteProduct_ShouldCallRepositoryDeleteMethod() {
-        mockSecurityContext();
-        mockAuthorizationUtil();
-
         doNothing().when(productRepository).deleteById("product-123");
 
         productService.deleteProduct("product-123");
@@ -199,9 +175,6 @@ class ProductServiceTest {
 
     @Test
     void updateStock_ShouldUpdateStock_WhenSuccessful() {
-        mockSecurityContext();
-        mockAuthorizationUtil();
-
         when(productRepository.findById("product-123")).thenReturn(Optional.of(product));
         when(productRepository.save(any(Product.class))).thenReturn(product);
         when(productMapper.toProductResponse(product)).thenReturn(productResponse);

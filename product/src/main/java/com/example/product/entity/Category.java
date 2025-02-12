@@ -1,11 +1,13 @@
 package com.example.product.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
-import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Table(name = "categories")

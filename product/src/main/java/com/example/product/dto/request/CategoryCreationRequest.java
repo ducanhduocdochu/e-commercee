@@ -1,6 +1,7 @@
 package com.example.product.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+
 import lombok.*;
 
 @Getter
@@ -8,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryCreationRequest {
-    @NotBlank
+    @NotBlank(message = "CATEGORY_INVALID_NAME")
     private String name;
 }

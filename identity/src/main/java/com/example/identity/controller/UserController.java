@@ -1,7 +1,9 @@
 package com.example.identity.controller;
 
 import java.util.List;
+
 import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.*;
 
 import com.example.identity.dto.request.ApiResponse;
@@ -10,9 +12,8 @@ import com.example.identity.dto.request.UserUpdateRequest;
 import com.example.identity.dto.response.UserResponse;
 import com.example.identity.service.UserService;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
-
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,7 +37,9 @@ public class UserController {
     }
 
     @GetMapping
-    @Operation(summary = "Lấy danh sách người dùng", description = "API để lấy danh sách toàn bộ người dùng trong hệ thống.")
+    @Operation(
+            summary = "Lấy danh sách người dùng",
+            description = "API để lấy danh sách toàn bộ người dùng trong hệ thống.")
     ApiResponse<List<UserResponse>> getUsers() {
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getUsers())
@@ -44,7 +47,9 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    @Operation(summary = "Lấy thông tin người dùng", description = "API để lấy thông tin của một người dùng dựa vào ID.")
+    @Operation(
+            summary = "Lấy thông tin người dùng",
+            description = "API để lấy thông tin của một người dùng dựa vào ID.")
     ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getUser(userId))

@@ -22,10 +22,15 @@ import org.springframework.web.filter.CorsFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
-            "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh",
-            "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html"
+        "/users",
+        "/auth/token",
+        "/auth/introspect",
+        "/auth/logout",
+        "/auth/refresh",
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/swagger-ui.html"
     };
-
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
@@ -34,13 +39,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request -> request
                 // Cho phép truy cập Swagger UI mà không cần xác thực
-                .requestMatchers(
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui.html"
-                ).permitAll()
-                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                .anyRequest().authenticated());
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
+                .permitAll()
+                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                .permitAll()
+                .anyRequest()
+                .authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                         .decoder(customJwtDecoder)
@@ -51,7 +55,6 @@ public class SecurityConfig {
 
         return httpSecurity.build();
     }
-
 
     @Bean
     public CorsFilter corsFilter() {

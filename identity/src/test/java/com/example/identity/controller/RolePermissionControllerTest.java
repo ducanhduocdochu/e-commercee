@@ -6,12 +6,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import java.util.List;
 import java.util.Set;
 
-import com.example.identity.dto.request.PermissionRequest;
-import com.example.identity.dto.request.RoleRequest;
-import com.example.identity.dto.response.PermissionResponse;
-import com.example.identity.dto.response.RoleResponse;
-import com.example.identity.service.PermissionService;
-import com.example.identity.service.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,6 +20,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.example.identity.dto.request.PermissionRequest;
+import com.example.identity.dto.request.RoleRequest;
+import com.example.identity.dto.response.PermissionResponse;
+import com.example.identity.dto.response.RoleResponse;
+import com.example.identity.service.PermissionService;
+import com.example.identity.service.RoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest

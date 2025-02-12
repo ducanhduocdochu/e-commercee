@@ -9,13 +9,12 @@ import com.example.identity.dto.request.PermissionRequest;
 import com.example.identity.dto.response.PermissionResponse;
 import com.example.identity.service.PermissionService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Permissions", description = "Quản lý Permission")
 @RestController

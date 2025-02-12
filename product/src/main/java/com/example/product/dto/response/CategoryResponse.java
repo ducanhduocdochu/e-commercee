@@ -1,8 +1,8 @@
 package com.example.product.dto.response;
 
-import lombok.*;
-
 import java.time.LocalDateTime;
+
+import lombok.*;
 
 @Getter
 @Setter
@@ -11,6 +11,6 @@ import java.time.LocalDateTime;
 public class CategoryResponse {
     private String id;
     private String name;
-    private LocalDateTime createdAt;  // ✅ Thêm thời gian tạo
-    private LocalDateTime updatedAt;  // ✅ Thêm thời gian cập nhật
+    private LocalDateTime createdAt; // ✅ Thêm thời gian tạo
+    private LocalDateTime updatedAt; // ✅ Thêm thời gian cập nhật
 }

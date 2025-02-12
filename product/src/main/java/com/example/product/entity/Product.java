@@ -1,12 +1,14 @@
 package com.example.product.entity;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
-import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Table(name = "products")
@@ -37,7 +39,7 @@ public class Product {
     private Category category;
 
     @Column(nullable = false)
-    private String sellerId;  // Chỉ lưu ID của Seller, không cần quan hệ với User
+    private String sellerId; // Chỉ lưu ID của Seller, không cần quan hệ với User
 
     // ✅ Tự động lưu thời gian tạo
     @CreationTimestamp

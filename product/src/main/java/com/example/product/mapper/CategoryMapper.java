@@ -1,15 +1,15 @@
 package com.example.product.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import com.example.product.dto.response.CategoryResponse;
 import com.example.product.dto.request.CategoryCreationRequest;
 import com.example.product.dto.request.CategoryUpdateRequest;
+import com.example.product.dto.response.CategoryResponse;
 import com.example.product.entity.Category;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {

@@ -142,7 +142,7 @@ class UserControllerTest {
                         .content(content))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(1010))
-                .andExpect(MockMvcResultMatchers.jsonPath("message").value("Email invalid"));
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("Invalid email format"));
     }
 
     @Test
@@ -252,7 +252,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/users/" + userId).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(1005))
-                .andExpect(MockMvcResultMatchers.jsonPath("message").value("User not existed"));
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("User does not exist"));
     }
 
     //
@@ -307,7 +307,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/users/" + userId).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(1005))
-                .andExpect(MockMvcResultMatchers.jsonPath("message").value("User not existed"));
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("User does not exist"));
     }
     //
     // updateUser
@@ -414,6 +414,6 @@ class UserControllerTest {
                         .content(content))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(1005))
-                .andExpect(MockMvcResultMatchers.jsonPath("message").value("User not existed"));
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("User does not exist"));
     }
 }

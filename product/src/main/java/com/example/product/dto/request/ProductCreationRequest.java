@@ -1,30 +1,31 @@
 package com.example.product.dto.request;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
 
-import java.math.BigDecimal;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCreationRequest {
-    @NotBlank
+    @NotBlank(message = "PRODUCT_INVALID_NAME")
     private String name;
 
     private String description;
 
-    @NotNull
-    @Min(0)
+    @NotNull(message = "PRODUCT_INVALID_STOCK")
+    @Min(value = 0, message = "PRODUCT_INVALID_PRICE")
     private BigDecimal price;
 
-    @NotNull
-    @Min(0)
+    @NotNull(message = "PRODUCT_INVALID_STOCK")
+    @Min(value = 0, message = "PRODUCT_INVALID_STOCK")
     private int stock;
 
-    @NotNull
+    @NotNull(message = "CATEGORY_INVALID_ID")
     private String categoryId;
 }

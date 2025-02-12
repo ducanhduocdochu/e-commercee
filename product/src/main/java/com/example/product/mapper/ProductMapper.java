@@ -1,5 +1,7 @@
 package com.example.product.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -7,10 +9,8 @@ import org.mapstruct.MappingTarget;
 import com.example.product.dto.request.ProductCreationRequest;
 import com.example.product.dto.request.ProductUpdateRequest;
 import com.example.product.dto.response.ProductResponse;
-import com.example.product.entity.Product;
 import com.example.product.entity.Category;
-
-import java.util.List;
+import com.example.product.entity.Product;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {

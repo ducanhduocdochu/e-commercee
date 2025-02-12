@@ -1,15 +1,17 @@
 package com.example.product.security;
 
-import com.example.product.exception.AppException;
-import com.example.product.exception.ErrorCode;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.example.product.exception.AppException;
+import com.example.product.exception.ErrorCode;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AuthorizationUtil {
@@ -24,16 +26,14 @@ public class AuthorizationUtil {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
-        List<String> userAuthorities = authentication.getAuthorities()
-                .stream()
+        List<String> userAuthorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         log.info("🔍 Authorities từ SecurityContext: {}", userAuthorities);
 
         // ✅ Kiểm tra xem user có ít nhất 1 role trong danh sách được phép không
-        boolean hasValidRole = userAuthorities.stream()
-                .anyMatch(requiredRoles::contains);
+        boolean hasValidRole = userAuthorities.stream().anyMatch(requiredRoles::contains);
 
         if (!hasValidRole) {
             log.error("❌ Người dùng không có quyền nào trong danh sách: {}", requiredRoles);

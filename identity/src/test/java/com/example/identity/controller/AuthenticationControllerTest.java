@@ -2,12 +2,6 @@ package com.example.identity.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import com.example.identity.dto.request.AuthenticationRequest;
-import com.example.identity.dto.request.IntrospectRequest;
-import com.example.identity.dto.request.LogoutRequest;
-import com.example.identity.dto.request.RefreshRequest;
-import com.example.identity.dto.response.AuthenticationResponse;
-import com.example.identity.dto.response.IntrospectResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,6 +15,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.example.identity.dto.request.AuthenticationRequest;
+import com.example.identity.dto.request.IntrospectRequest;
+import com.example.identity.dto.request.LogoutRequest;
+import com.example.identity.dto.request.RefreshRequest;
+import com.example.identity.dto.response.AuthenticationResponse;
+import com.example.identity.dto.response.IntrospectResponse;
 import com.example.identity.service.AuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

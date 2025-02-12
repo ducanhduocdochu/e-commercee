@@ -3,7 +3,6 @@ package com.example.product.service;
 import java.util.List;
 import java.util.Set;
 
-import com.example.product.security.AuthorizationUtil;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +20,7 @@ import com.example.product.exception.ErrorCode;
 import com.example.product.mapper.CategoryMapper;
 import com.example.product.repository.CategoryRepository;
 import com.example.product.repository.ProductRepository;
+import com.example.product.security.AuthorizationUtil;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +64,8 @@ public class CategoryService {
     }
 
     public CategoryResponse getCategory(String categoryId) {
-        Category category = categoryRepository.findById(categoryId)
+        Category category = categoryRepository
+                .findById(categoryId)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         return categoryMapper.toCategoryResponse(category);
@@ -73,7 +74,8 @@ public class CategoryService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public CategoryResponse updateCategory(String categoryId, CategoryUpdateRequest request) {
         AuthorizationUtil.checkAuthorities(Set.of("ROLE_ADMIN"));
-        Category category = categoryRepository.findById(categoryId)
+        Category category = categoryRepository
+                .findById(categoryId)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         categoryMapper.updateCategoryFromRequest(request, category);

@@ -1,7 +1,9 @@
 package com.example.product.configuration;
 
-import com.example.product.security.AuthenticatedUser;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,9 +11,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.example.product.security.AuthenticatedUser;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j

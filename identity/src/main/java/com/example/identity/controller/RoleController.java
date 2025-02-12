@@ -9,13 +9,12 @@ import com.example.identity.dto.request.RoleRequest;
 import com.example.identity.dto.response.RoleResponse;
 import com.example.identity.service.RoleService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Roles", description = "Quản lý Role")
 @RestController

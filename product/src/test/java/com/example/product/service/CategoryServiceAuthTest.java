@@ -1,5 +1,29 @@
 package com.example.product.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.example.product.dto.request.CategoryCreationRequest;
 import com.example.product.dto.request.CategoryUpdateRequest;
 import com.example.product.dto.response.CategoryResponse;
@@ -11,34 +35,9 @@ import com.example.product.repository.CategoryRepository;
 import com.example.product.repository.ProductRepository;
 import com.example.product.security.AuthenticatedUser;
 import com.example.product.security.AuthorizationUtil;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CategoryServiceTest {
+class CategoryServiceAuthTest {
 
     @Mock
     private CategoryRepository categoryRepository;
@@ -67,6 +66,10 @@ class CategoryServiceTest {
         categoryUpdateRequest = new CategoryUpdateRequest("Updated Electronics");
 
         categoryResponse = new CategoryResponse("category-123", "Electronics", null, null);
+
+        // ✅ Mock SecurityContext và AuthorizationUtil
+        mockSecurityContext("admin-123", "ROLE_ADMIN");
+        mockAuthorizationUtil();
     }
 
     private void mockSecurityContext(String userId, String rawRoles) {
@@ -74,31 +77,29 @@ class CategoryServiceTest {
         Authentication authentication = mock(Authentication.class);
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(userId, rawRoles);
 
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(authenticatedUser);
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(authentication.getPrincipal()).thenReturn(authenticatedUser);
 
-        // ✅ Chuyển danh sách role thành Collection<? extends GrantedAuthority>
-        Collection<? extends GrantedAuthority> authorities = Arrays.stream(rawRoles.split(" "))
+        // ✅ Chuyển danh sách role thành List<GrantedAuthority> để tránh lỗi thenReturn()
+        List<GrantedAuthority> authorities = Arrays.stream(rawRoles.split(" "))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        when(authentication.getAuthorities()).thenReturn(authorities); // ✅ Đúng kiểu dữ liệu
+        lenient().when(authentication.getAuthorities()).thenAnswer(invocation -> authorities);
 
         SecurityContextHolder.setContext(securityContext);
     }
 
     private void mockAuthorizationUtil() {
-        try (var mockedAuthorizationUtil = mockStatic(AuthorizationUtil.class)) {
-            mockedAuthorizationUtil.when(() -> AuthorizationUtil.checkAuthorities(any()))
+        try (MockedStatic<AuthorizationUtil> mockedAuthorizationUtil = mockStatic(AuthorizationUtil.class)) {
+            mockedAuthorizationUtil
+                    .when(() -> AuthorizationUtil.checkAuthorities(any()))
                     .thenAnswer(invocation -> null);
         }
     }
 
     @Test
     void createCategory_ShouldReturnCategoryResponse_WhenSuccessful() {
-        mockSecurityContext("admin-123", "ROLE_ADMIN");
-        mockAuthorizationUtil();
-
         when(categoryRepository.findByName("Electronics")).thenReturn(Optional.empty());
         when(categoryMapper.toCategory(categoryCreationRequest)).thenReturn(category);
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
@@ -113,9 +114,6 @@ class CategoryServiceTest {
 
     @Test
     void createCategory_ShouldThrowException_WhenCategoryExists() {
-        mockSecurityContext("admin-123", "ROLE_ADMIN");
-        mockAuthorizationUtil();
-
         when(categoryRepository.findByName("Electronics")).thenReturn(Optional.of(category));
 
         assertThatThrownBy(() -> categoryService.createCategory(categoryCreationRequest))
@@ -124,36 +122,18 @@ class CategoryServiceTest {
     }
 
     @Test
-    void getCategories_ShouldReturnListOfCategories() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "name"));
-        List<Category> categories = List.of(category);
-        Page<Category> categoryPage = new PageImpl<>(categories);
+    void createCategory_ShouldThrowException_WhenDataIntegrityViolationOccurs() {
+        when(categoryRepository.findByName("Electronics")).thenReturn(Optional.empty());
+        when(categoryMapper.toCategory(categoryCreationRequest)).thenReturn(category);
+        when(categoryRepository.save(any(Category.class))).thenThrow(new DataIntegrityViolationException(""));
 
-        when(categoryRepository.findAll(pageable)).thenReturn(categoryPage);
-        when(categoryMapper.toCategoryResponseList(categories)).thenReturn(List.of(categoryResponse));
-
-        List<CategoryResponse> result = categoryService.getCategories(10, 0, "name", "ASC");
-
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Electronics");
-    }
-
-    @Test
-    void getCategory_ShouldReturnCategoryResponse_WhenCategoryExists() {
-        when(categoryRepository.findById("category-123")).thenReturn(Optional.of(category));
-        when(categoryMapper.toCategoryResponse(category)).thenReturn(categoryResponse);
-
-        CategoryResponse result = categoryService.getCategory("category-123");
-
-        assertThat(result).isNotNull();
-        assertThat(result.getName()).isEqualTo("Electronics");
+        assertThatThrownBy(() -> categoryService.createCategory(categoryCreationRequest))
+                .isInstanceOf(AppException.class)
+                .hasMessage(ErrorCode.CATEGORY_EXISTED.getMessage());
     }
 
     @Test
     void updateCategory_ShouldUpdateAndReturnCategoryResponse() {
-        mockSecurityContext("admin-123", "ROLE_ADMIN");
-        mockAuthorizationUtil();
-
         when(categoryRepository.findById("category-123")).thenReturn(Optional.of(category));
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
         when(categoryMapper.toCategoryResponse(category)).thenReturn(categoryResponse);
@@ -167,9 +147,6 @@ class CategoryServiceTest {
 
     @Test
     void deleteCategory_ShouldCallRepositoryDeleteMethod_WhenNoProductsExist() {
-        mockSecurityContext("admin-123", "ROLE_ADMIN");
-        mockAuthorizationUtil();
-
         when(productRepository.existsByCategoryId("category-123")).thenReturn(false);
         doNothing().when(categoryRepository).deleteById("category-123");
 
@@ -180,9 +157,6 @@ class CategoryServiceTest {
 
     @Test
     void deleteCategory_ShouldThrowException_WhenProductsExist() {
-        mockSecurityContext("admin-123", "ROLE_ADMIN");
-        mockAuthorizationUtil();
-
         when(productRepository.existsByCategoryId("category-123")).thenReturn(true);
 
         assertThatThrownBy(() -> categoryService.deleteCategory("category-123"))

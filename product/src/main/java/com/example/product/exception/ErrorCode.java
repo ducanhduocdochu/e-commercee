@@ -28,11 +28,25 @@ public enum ErrorCode {
     PRODUCT_INVALID_STOCK(2004, "Stock quantity must be non-negative", HttpStatus.BAD_REQUEST),
     PRODUCT_CATEGORY_NOT_FOUND(2005, "Category associated with the product not found", HttpStatus.NOT_FOUND),
     PRODUCT_UNAUTHORIZED(2006, "You do not have permission to modify this product", HttpStatus.FORBIDDEN),
+    PRODUCT_INVALID_ID(2007, "Product ID cannot be null", HttpStatus.BAD_REQUEST),
+    PRODUCT_INVALID_QUANTITY(2008, "Quantity must be at least {min}", HttpStatus.BAD_REQUEST),
+    PRODUCT_INVALID_NAME(2009, "Product ID cannot be empty", HttpStatus.BAD_REQUEST),
 
     // Category Errors
     CATEGORY_NOT_FOUND(3001, "Category not found", HttpStatus.NOT_FOUND),
     CATEGORY_EXISTED(3002, "Category already exists", HttpStatus.BAD_REQUEST),
     CATEGORY_DELETE_FAILED(3003, "Cannot delete category with existing products", HttpStatus.BAD_REQUEST),
+    CATEGORY_INVALID_NAME(3004, "Category not blank", HttpStatus.BAD_REQUEST),
+    CATEGORY_INVALID_ID(3004, "Id not null", HttpStatus.BAD_REQUEST),
+
+    // Cart Errors
+    CART_NOT_FOUND(6001, "Cart not found", HttpStatus.NOT_FOUND),
+    CART_EMPTY(6002, "Cart is empty", HttpStatus.BAD_REQUEST),
+    CART_ITEM_NOT_FOUND(6003, "Cart item not found", HttpStatus.NOT_FOUND),
+    CART_ITEM_ALREADY_EXISTS(6004, "Item already exists in cart", HttpStatus.BAD_REQUEST),
+    CART_INVALID_QUANTITY(6005, "Invalid quantity for cart item", HttpStatus.BAD_REQUEST),
+    CART_PRODUCT_OUT_OF_STOCK(6006, "Product is out of stock", HttpStatus.BAD_REQUEST),
+    CART_UNAUTHORIZED_ACCESS(6007, "You do not have permission to modify this cart", HttpStatus.FORBIDDEN),
 
     // Order Errors (Dự phòng nếu có Order Service)
     ORDER_NOT_FOUND(4001, "Order not found", HttpStatus.NOT_FOUND),

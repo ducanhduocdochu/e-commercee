@@ -1,20 +1,21 @@
 package com.example.product.configuration;
 
-import com.example.product.security.JwtAuthenticationFilter;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.AuthenticationEntryPoint;
-
-import javax.crypto.spec.SecretKeySpec;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
+
+import com.example.product.security.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -23,14 +24,19 @@ public class SecurityConfig {
     private String signerKey;
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/products",
-            "/products/**",
-            "/categories",
-            "/categories/**",
-            "/product/category/**",
-            "/product/seller/**",
-            "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html"
+        "/products",
+        "/products/**",
+        "/internal/products/**",
+        "/categories",
+        "/categories/**",
+        "/product/category/**",
+        "/product/seller/**",
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/swagger-ui.html"
     };
+
+    private static final String[] PUBLIC_ENDPOINTS_POST = {"/internal/products/**"};
 
     private final CustomJwtAuthenticationConverter customJwtAuthenticationConverter;
 
@@ -43,13 +49,14 @@ public class SecurityConfig {
         httpSecurity
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS)
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .addFilterBefore(jwtAuthenticationFilter(), BearerTokenAuthenticationFilter.class)
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwtConfigurer -> jwtConfigurer
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                                 .decoder(jwtDecoder())
                                 .jwtAuthenticationConverter(customJwtAuthenticationConverter)) // ✅ Inject converter
                         .authenticationEntryPoint(authenticationEntryPoint()));
