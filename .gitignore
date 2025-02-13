@@ -161,6 +161,62 @@ scheduled-discount/level-2/dist/
 scheduled-discount/level-2/logs/
 scheduled-discount/level-2/.env
 scheduled-discount/level-2/tmp/
+
+# ==============================
+# IGNORE GOLANG BUILD FILES
+# ==============================
+/bin/
+/pkg/
+/vendor/
+/order/tmp/
+/order/debug/
+
+# ==============================
+# IGNORE ENVIRONMENT & CONFIG FILES
+# ==============================
+**/.env
+**/.env.local
+**/.env.*.local
+/order/config/config.json
+/order/config/*.yaml
+
+# ==============================
+# IGNORE LOGS & TEMP FILES
+# ==============================
+**/logs/
+**/*.log
+**/nohup.out
+/order/*.log
+
+# ==============================
+# IGNORE DEPENDENCY & MODULES
+# ==============================
+/order/go.sum
+/order/go.mod
+/order/vendor/
+
+# ==============================
+# IGNORE BUILD & EXECUTABLE FILES
+# ==============================
+/order/order
+/order/*.exe
+/order/*.out
+/order/*.o
+
+# ==============================
+# IGNORE DATABASE & CACHE
+# ==============================
+/order/data/
+/order/mongodb/
+/order/redis/
+
+# ==============================
+# IGNORE DOCKER & CONTAINER FILES
+# ==============================
+/order/docker-compose.override.yml
+/order/.dockerignore
+/order/docker/data/
+
 # ==============================
 # END OF FILE
 # ==============================
