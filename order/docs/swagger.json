@@ -1,0 +1,361 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/orders": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Trả về danh sách đơn hàng của người mua hiện tại.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Lấy danh sách đơn hàng của người mua",
+                "responses": {
+                    "200": {
+                        "description": "Danh sách đơn hàng",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Người dùng chưa xác thực",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đơn hàng",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "API tạo đơn hàng với danh sách sản phẩm và thông tin giảm giá (nếu có).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Tạo đơn hàng mới",
+                "parameters": [
+                    {
+                        "description": "Dữ liệu đơn hàng",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Đơn hàng được tạo thành công",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Lỗi request không hợp lệ",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Người dùng chưa xác thực",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Lỗi hệ thống",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/cancel/{order_id}": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Chỉ có thể hủy đơn hàng nếu nó đang ở trạng thái `Pending`.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Hủy đơn hàng",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID của đơn hàng",
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đơn hàng đã bị hủy",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Trạng thái đơn hàng không hợp lệ",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Người dùng chưa xác thực",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/detail/{order_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lấy thông tin chi tiết về một đơn hàng cụ thể.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Xem chi tiết đơn hàng",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID của đơn hàng",
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thông tin chi tiết đơn hàng",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Người dùng chưa xác thực",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đơn hàng",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/seller/orders": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Trả về danh sách đơn hàng do người bán quản lý.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Lấy danh sách đơn hàng của người bán",
+                "responses": {
+                    "200": {
+                        "description": "Danh sách đơn hàng của Seller",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Người dùng chưa xác thực",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đơn hàng",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/seller/orders/confirm/{order_id}": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Người bán xác nhận đơn hàng để tiến hành giao hàng.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Xác nhận đơn hàng",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID của đơn hàng",
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đơn hàng đã được xác nhận",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Trạng thái đơn hàng không hợp lệ",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Người dùng chưa xác thực",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ApiResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.CreateOrderRequest": {
+            "description": "Dữ liệu cần thiết để tạo đơn hàng",
+            "type": "object",
+            "required": [
+                "items",
+                "order_value"
+            ],
+            "properties": {
+                "discount_id": {
+                    "description": "✅ Nếu có thì phải là UUID",
+                    "type": "string"
+                },
+                "discount_value": {
+                    "description": "✅ Không được âm",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "items": {
+                    "description": "✅ Phải có ít nhất một sản phẩm",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.OrderItemRequest"
+                    }
+                },
+                "order_value": {
+                    "description": "✅ Không được âm",
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        },
+        "dto.OrderItemRequest": {
+            "description": "Dữ liệu cần thiết để tạo đơn hàng đại diện cho một mục trong đơn hàng",
+            "type": "object",
+            "required": [
+                "price",
+                "product_id",
+                "quantity"
+            ],
+            "properties": {
+                "price": {
+                    "description": "✅ Giá sản phẩm không được âm",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "product_id": {
+                    "description": "✅ Phải có product_id hợp lệ (UUID)",
+                    "type": "string"
+                },
+                "quantity": {
+                    "description": "✅ Số lượng tối thiểu là 1",
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        },
+        "utils.ApiResponse": {
+            "description": "ApiResponse giúp tạo response chuẩn",
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {}
+            }
+        }
+    }
+}

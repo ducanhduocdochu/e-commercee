@@ -4,6 +4,7 @@ import { Model, SortOrder } from 'mongoose';
 import { Discount } from '../interfaces/discount.interface';
 import { CreateDiscountDto } from '../dtos/create-discount.dto';
 import { ErrorCode, ErrorCodeDetails } from '../../common/error-code.enum';
+import { GrpcMethod } from '@nestjs/microservices';
 
 @Injectable()
 export class DiscountService {

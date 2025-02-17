@@ -89,12 +89,12 @@ export class ScheduledDiscountDto {
   discount_max_uses: number;
 
   @ApiProperty({
-    example: '500000',
+    example: 500000,
     description: 'Giá trị giảm giá tối đa có thể áp dụng',
   })
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  discount_max_value: string;
+  discount_max_value: number;
 
   @ApiProperty({
     example: 0,

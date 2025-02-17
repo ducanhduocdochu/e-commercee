@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package discount;
+
+// ✅ Request gửi từ Order Service đến Discount Service
+message DiscountRequest {
+  string discount_id = 1;
+  double order_value = 2;
+}
+
+// ✅ Response từ Discount Service
+message DiscountResponse {
+  string discount_id = 1;
+  double discount_amount = 2;
+}
+
+// ✅ gRPC Service
+service DiscountService {
+  rpc CheckDiscount(DiscountRequest) returns (DiscountResponse);
+}

@@ -11,7 +11,7 @@ export interface Discount extends Document {
   discount_start_date: Date;
   discount_end_date: Date;
   discount_max_uses: number;
-  discount_max_value: string;
+  discount_max_value: number;
   discount_use_count: number;
   discount_invisable: boolean;
   discount_applies_type: string;

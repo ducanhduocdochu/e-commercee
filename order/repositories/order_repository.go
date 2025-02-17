@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"context"
-	"order-service/config"
-	"order-service/models"
+	config "order/configs"
+	"order/models"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"

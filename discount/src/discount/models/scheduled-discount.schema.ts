@@ -13,7 +13,7 @@ const ScheduledDiscountSchema = new Schema<ScheduledDiscount>(
     discount_start_date: { type: Date, required: true },
     discount_end_date: { type: Date, required: true },
     discount_max_uses: { type: Number, required: true },
-    discount_max_value: { type: String, required: true },
+    discount_max_value: { type: Number, required: true },
     discount_use_count: { type: Number, required: true },
     discount_invisable: { type: Boolean, required: true },
     discount_applies_type: {

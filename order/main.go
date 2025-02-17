@@ -3,34 +3,46 @@ package main
 import (
 	"fmt"
 	"log"
-	config "order/configs"
+	"order/configs"
+	"order/controllers"
 	"order/routes"
-	"os"
+	"order/services"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files" // 📌 Thêm import này
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "order/docs" // 📌 Import tài liệu Swagger
 )
 
 func main() {
-	// Load biến môi trường từ .env
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("⚠️ Không tìm thấy file .env, sử dụng giá trị mặc định")
+	// Load environment variables từ .env
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("❌ Lỗi khi tải tệp .env")
 	}
 
-	// Kết nối database
-	config.ConnectDatabase()
+	// Kết nối MongoDB
+	configs.ConnectDatabase()
 
-	// Khởi tạo Gin router
-	router := gin.Default()
+	// ✅ Khởi tạo Order Service
+	orderService := services.NewOrderService(configs.MongoClient.Database("order_service").Collection("orders"))
 
-	// Đăng ký routes cho Order
-	routes.OrderRoutes(router)
+	// ✅ Khởi tạo Order Controller
+	orderController := controllers.NewOrderController(orderService)
 
-	// Khởi động server
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	log.Printf("🚀 Server đang chạy tại http://localhost:%s", port)
-	router.Run(":" + port)
+	// ✅ Khởi tạo Router
+	r := gin.Default()
+
+	// ✅ Cấu hình Swagger
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler)) // 📌 Fix lỗi ở đây
+
+	// ✅ Định nghĩa các routes
+	routes.OrderRoutes(r, orderController)
+
+	// ✅ Chạy server trên cổng 8000
+	port := ":8000"
+	fmt.Println("🚀 Server đang chạy trên cổng", port)
+	r.Run(port)
 }

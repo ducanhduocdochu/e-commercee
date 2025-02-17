@@ -16,7 +16,7 @@ const mockScheduledDiscount = {
   discount_start_date: new Date(),
   discount_end_date: new Date(),
   discount_max_uses: 1000,
-  discount_max_value: '500000',
+  discount_max_value: 500000,
   discount_use_count: 0,
   discount_invisable: false,
   discount_min_order_value: 500000,
